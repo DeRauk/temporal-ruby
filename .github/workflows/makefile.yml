@@ -50,13 +50,13 @@ jobs:
         run: |
           cd examples && bundle install --path vendor/bundle
 
-      - name: Wait for containers to settle
-        run: |
-          sleep 15
-
       - name: Register Namespace
         run: |
           cd examples && bin/register_namespace ruby-samples
+
+      - name: Wait for namespace to settle
+        run: |
+          sleep 15
 
       - name: Boot up worker
         run: |
@@ -73,3 +73,9 @@ jobs:
           USE_ERROR_SERIALIZATION_V2: 1
         run: |
           cd examples && bin/worker &
+
+      - name: Run RSpec
+        env:
+          USE_ERROR_SERIALIZATION_V2: 1
+        run: |
+          cd examples && bundle exec rspec
