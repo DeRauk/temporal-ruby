@@ -73,97 +73,97 @@ describe Temporal::Worker do
     end
   end
 
-#   describe '#register_dynamic_workflow' do
-#     let(:workflow_keys) { subject.send(:workflows).keys }
-#
-#     it 'registers a dynamic workflow with the provided config options' do
-#       lookup = instance_double(Temporal::ExecutableLookup, add: nil)
-#       expect(Temporal::ExecutableLookup).to receive(:new).and_return(lookup)
-#       expect(lookup).to receive(:add_dynamic).with('test-dynamic-workflow', TestWorkerWorkflow)
-#
-#       subject.register_dynamic_workflow(
-#         TestWorkerWorkflow,
-#         name: 'test-dynamic-workflow',
-#         namespace: 'test-namespace',
-#         task_queue: 'test-task-queue'
-#       )
-#
-#       expect(workflow_keys).to include(['test-namespace', 'test-task-queue'])
-#     end
-#
-#     it 'cannot double-register a workflow' do
-#       subject.register_dynamic_workflow(TestWorkerWorkflow)
-#       expect do
-#         subject.register_dynamic_workflow(OtherTestWorkerWorkflow)
-#       end.to raise_error(
-#         Temporal::SecondDynamicWorkflowError,
-#         'Temporal::Worker#register_dynamic_workflow: cannot register OtherTestWorkerWorkflow dynamically; ' \
-#         'TestWorkerWorkflow was already registered dynamically for task queue \'default-task-queue\', ' \
-#         'and there can be only one.'
-#       )
-#     end
-#   end
-#
-#   describe '#register_activity' do
-#     let(:lookup) { instance_double(Temporal::ExecutableLookup, add: nil) }
-#     let(:activity_keys) { subject.send(:activities).keys }
-#
-#     it 'registers an activity based on the default config options' do
-#       expect(Temporal::ExecutableLookup).to receive(:new).and_return(lookup)
-#       subject.register_activity(TestWorkerActivity)
-#
-#       expect(lookup).to have_received(:add).with('TestWorkerActivity', TestWorkerActivity)
-#       expect(activity_keys).to include(%w[default-namespace default-task-queue])
-#     end
-#
-#     it 'registers an activity with provided config options' do
-#       expect(Temporal::ExecutableLookup).to receive(:new).and_return(lookup)
-#
-#       subject.register_activity(
-#         TestWorkerActivity,
-#         name: 'test-activity',
-#         namespace: 'test-namespace',
-#         task_queue: 'test-task-queue'
-#       )
-#
-#       expect(lookup).to have_received(:add).with('test-activity', TestWorkerActivity)
-#       expect(activity_keys).to include(%w[test-namespace test-task-queue])
-#     end
-#   end
-#
-#   describe '#register_dynamic_activity' do
-#     let(:activity_keys) { subject.send(:activities).keys }
-#
-#     it 'registers a dynamic activity with the provided config options' do
-#       lookup = instance_double(Temporal::ExecutableLookup, add: nil)
-#       expect(Temporal::ExecutableLookup).to receive(:new).and_return(lookup)
-#       expect(lookup).to receive(:add_dynamic).with('test-dynamic-activity', TestWorkerActivity)
-#
-#       subject.register_dynamic_activity(
-#         TestWorkerActivity,
-#         name: 'test-dynamic-activity',
-#         namespace: 'test-namespace',
-#         task_queue: 'test-task-queue'
-#       )
-#
-#       expect(activity_keys).to include(%w[test-namespace test-task-queue])
-#     end
-#
-#     it 'cannot double-register an activity' do
-#       subject.register_dynamic_activity(TestWorkerActivity)
-#       expect do
-#         subject.register_dynamic_activity(OtherTestWorkerActivity)
-#       end.to raise_error(
-#         Temporal::SecondDynamicActivityError,
-#         'Temporal::Worker#register_dynamic_activity: cannot register OtherTestWorkerActivity dynamically; ' \
-#         'TestWorkerActivity was already registered dynamically for task queue \'default-task-queue\', ' \
-#         'and there can be only one.'
-#       )
-#     end
-#
-#
-#   end
-#
+  describe '#register_dynamic_workflow' do
+    let(:workflow_keys) { subject.send(:workflows).keys }
+
+    it 'registers a dynamic workflow with the provided config options' do
+      lookup = instance_double(Temporal::ExecutableLookup, add: nil)
+      expect(Temporal::ExecutableLookup).to receive(:new).and_return(lookup)
+      expect(lookup).to receive(:add_dynamic).with('test-dynamic-workflow', TestWorkerWorkflow)
+
+      subject.register_dynamic_workflow(
+        TestWorkerWorkflow,
+        name: 'test-dynamic-workflow',
+        namespace: 'test-namespace',
+        task_queue: 'test-task-queue'
+      )
+
+      expect(workflow_keys).to include(['test-namespace', 'test-task-queue'])
+    end
+
+    it 'cannot double-register a workflow' do
+      subject.register_dynamic_workflow(TestWorkerWorkflow)
+      expect do
+        subject.register_dynamic_workflow(OtherTestWorkerWorkflow)
+      end.to raise_error(
+        Temporal::SecondDynamicWorkflowError,
+        'Temporal::Worker#register_dynamic_workflow: cannot register OtherTestWorkerWorkflow dynamically; ' \
+        'TestWorkerWorkflow was already registered dynamically for task queue \'default-task-queue\', ' \
+        'and there can be only one.'
+      )
+    end
+  end
+
+  describe '#register_activity' do
+    let(:lookup) { instance_double(Temporal::ExecutableLookup, add: nil) }
+    let(:activity_keys) { subject.send(:activities).keys }
+
+    it 'registers an activity based on the default config options' do
+      expect(Temporal::ExecutableLookup).to receive(:new).and_return(lookup)
+      subject.register_activity(TestWorkerActivity)
+
+      expect(lookup).to have_received(:add).with('TestWorkerActivity', TestWorkerActivity)
+      expect(activity_keys).to include(%w[default-namespace default-task-queue])
+    end
+
+    it 'registers an activity with provided config options' do
+      expect(Temporal::ExecutableLookup).to receive(:new).and_return(lookup)
+
+      subject.register_activity(
+        TestWorkerActivity,
+        name: 'test-activity',
+        namespace: 'test-namespace',
+        task_queue: 'test-task-queue'
+      )
+
+      expect(lookup).to have_received(:add).with('test-activity', TestWorkerActivity)
+      expect(activity_keys).to include(%w[test-namespace test-task-queue])
+    end
+  end
+
+  describe '#register_dynamic_activity' do
+    let(:activity_keys) { subject.send(:activities).keys }
+
+    it 'registers a dynamic activity with the provided config options' do
+      lookup = instance_double(Temporal::ExecutableLookup, add: nil)
+      expect(Temporal::ExecutableLookup).to receive(:new).and_return(lookup)
+      expect(lookup).to receive(:add_dynamic).with('test-dynamic-activity', TestWorkerActivity)
+
+      subject.register_dynamic_activity(
+        TestWorkerActivity,
+        name: 'test-dynamic-activity',
+        namespace: 'test-namespace',
+        task_queue: 'test-task-queue'
+      )
+
+      expect(activity_keys).to include(%w[test-namespace test-task-queue])
+    end
+
+    it 'cannot double-register an activity' do
+      subject.register_dynamic_activity(TestWorkerActivity)
+      expect do
+        subject.register_dynamic_activity(OtherTestWorkerActivity)
+      end.to raise_error(
+        Temporal::SecondDynamicActivityError,
+        'Temporal::Worker#register_dynamic_activity: cannot register OtherTestWorkerActivity dynamically; ' \
+        'TestWorkerActivity was already registered dynamically for task queue \'default-task-queue\', ' \
+        'and there can be only one.'
+      )
+    end
+
+
+  end
+
 #   describe '#add_workflow_task_middleware' do
 #     let(:middleware) { subject.send(:workflow_task_middleware) }
 #
