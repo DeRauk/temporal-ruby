@@ -72,6 +72,10 @@ jobs:
         with:
           ruby-version: 3.0.3
 
+      - name: Wait for containers to settle
+        run: |
+          sleep 15
+
       - name: Bundle Install
         run: |
           cd examples && bundle install --path vendor/bundle
