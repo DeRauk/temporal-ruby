@@ -9,10 +9,10 @@ on:
 jobs:
   test_gem:
     runs-on: ubuntu-latest
-    
+
     strategy:
       fail-fast: false
-    
+
     steps:
     - uses: actions/checkout@v3
 
@@ -21,64 +21,38 @@ jobs:
       with:
         ruby-version: 3.0.3
         bundler-cache: true
-        
+
     - name: Run tests
       run: |
         bundle exec rspec
 
   test_examples:
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
-    env:
-      TEMPORAL_HOST: temporal
-
-    services:
-      postgres:
-        image: postgres:13
-        env:
-          POSTGRES_USER: temporal
-          POSTGRES_PASSWORD: temporal
-          POSTGRES_DB: temporal
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
-      temporal:
-        image: temporalio/auto-setup:latest
-        ports:
-          - 7233:7233
-        env:
-          DB: postgresql
-          DB_PORT: 5432
-          POSTGRES_USER: temporal
-          POSTGRES_PWD: temporal
-          POSTGRES_SEEDS: postgres
-          options: >-
-            --health-cmd "bash -c 'grpc-health-probe -addr=localhost:7233'"
-            --health-interval 10s
-            --health-timeout 5s
-            --health-retries 5
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Start containerized server and dependencies
+        run: |
+          docker-compose \
+            -f /examples/docker-compose.yml \
+            up -d
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.0.3
 
-      - name: Wait for containers to settle
-        run: |
-          sleep 15
-
       - name: Bundle Install
         run: |
           cd examples && bundle install --path vendor/bundle
+
+      - name: Wait for containers to settle
+        run: |
+          sleep 15
 
       - name: Register Namespace
         run: |
