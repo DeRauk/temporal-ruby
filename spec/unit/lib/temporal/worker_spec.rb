@@ -337,98 +337,98 @@ describe Temporal::Worker do
       expect(workflow_poller).to have_received(:start)
     end
 
-#     context 'when middleware is configured' do
-#       let(:entry_1) { instance_double(Temporal::Middleware::Entry) }
-#       let(:entry_2) { instance_double(Temporal::Middleware::Entry) }
-#       let(:entry_3) { instance_double(Temporal::Middleware::Entry) }
-#
-#       before do
-#         allow(Temporal::Middleware::Entry)
-#           .to receive(:new)
-#           .with(TestWorkerWorkflowTaskMiddleware, [])
-#           .and_return(entry_1)
-#
-#         allow(Temporal::Middleware::Entry)
-#           .to receive(:new)
-#           .with(TestWorkerActivityMiddleware, [])
-#           .and_return(entry_2)
-#
-#         allow(Temporal::Middleware::Entry)
-#           .to receive(:new)
-#           .with(TestWorkerWorkflowMiddleware, [])
-#           .and_return(entry_3)
-#
-#         subject.add_workflow_task_middleware(TestWorkerWorkflowTaskMiddleware)
-#         subject.add_activity_middleware(TestWorkerActivityMiddleware)
-#         subject.add_workflow_middleware(TestWorkerWorkflowMiddleware)
-#       end
-#
-#       it 'starts pollers with correct middleware' do
-#         allow(subject).to receive(:shutting_down?).and_return(true)
-#
-#         allow(Temporal::Workflow::Poller)
-#           .to receive(:new)
-#           .with(
-#             'default-namespace',
-#             'default-task-queue',
-#             an_instance_of(Temporal::ExecutableLookup),
-#             config,
-#             [entry_1],
-#             [entry_3],
-#             thread_pool_size: 10,
-#             binary_checksum: nil
-#           )
-#           .and_return(workflow_poller_1)
-#
-#         allow(Temporal::Activity::Poller)
-#           .to receive(:new)
-#           .with(
-#             'default-namespace',
-#             'default-task-queue',
-#             an_instance_of(Temporal::ExecutableLookup),
-#             config,
-#             [entry_2],
-#             thread_pool_size: 20
-#           )
-#           .and_return(activity_poller_1)
-#
-#         subject.register_workflow(TestWorkerWorkflow)
-#         subject.register_activity(TestWorkerActivity)
-#
-#         subject.start
-#
-#         expect(workflow_poller_1).to have_received(:start)
-#         expect(activity_poller_1).to have_received(:start)
-#       end
-#     end
-#
-#     it 'sleeps while waiting for the shutdown' do
-#       allow(subject).to receive(:shutting_down?).and_return(false, false, false, true)
-#       allow(subject).to receive(:sleep).and_return(nil)
-#
-#       subject.start
-#
-#       expect(subject).to have_received(:sleep).with(1).exactly(3).times
-#     end
-#
-#     describe 'signal handling' do
-#       before do
-#         @thread = Thread.new { subject.start }
-#         sleep THREAD_SYNC_DELAY # give worker time to start
-#       end
-#
-#       around do |example|
-#         # Trick RSpec into not shutting itself down on TERM signal
-#         old_term_handler = Signal.trap('TERM', 'SYSTEM_DEFAULT')
-#         old_int_handler = Signal.trap('INT', 'SYSTEM_DEFAULT')
-#
-#         example.run
-#
-#         # Restore the original signal handling behaviour
-#         Signal.trap('TERM', old_term_handler)
-#         Signal.trap('INT', old_int_handler)
-#       end
-#
+    context 'when middleware is configured' do
+      let(:entry_1) { instance_double(Temporal::Middleware::Entry) }
+      let(:entry_2) { instance_double(Temporal::Middleware::Entry) }
+      let(:entry_3) { instance_double(Temporal::Middleware::Entry) }
+
+      before do
+        allow(Temporal::Middleware::Entry)
+          .to receive(:new)
+          .with(TestWorkerWorkflowTaskMiddleware, [])
+          .and_return(entry_1)
+
+        allow(Temporal::Middleware::Entry)
+          .to receive(:new)
+          .with(TestWorkerActivityMiddleware, [])
+          .and_return(entry_2)
+
+        allow(Temporal::Middleware::Entry)
+          .to receive(:new)
+          .with(TestWorkerWorkflowMiddleware, [])
+          .and_return(entry_3)
+
+        subject.add_workflow_task_middleware(TestWorkerWorkflowTaskMiddleware)
+        subject.add_activity_middleware(TestWorkerActivityMiddleware)
+        subject.add_workflow_middleware(TestWorkerWorkflowMiddleware)
+      end
+
+      it 'starts pollers with correct middleware' do
+        allow(subject).to receive(:shutting_down?).and_return(true)
+
+        allow(Temporal::Workflow::Poller)
+          .to receive(:new)
+          .with(
+            'default-namespace',
+            'default-task-queue',
+            an_instance_of(Temporal::ExecutableLookup),
+            config,
+            [entry_1],
+            [entry_3],
+            thread_pool_size: 10,
+            binary_checksum: nil
+          )
+          .and_return(workflow_poller_1)
+
+        allow(Temporal::Activity::Poller)
+          .to receive(:new)
+          .with(
+            'default-namespace',
+            'default-task-queue',
+            an_instance_of(Temporal::ExecutableLookup),
+            config,
+            [entry_2],
+            thread_pool_size: 20
+          )
+          .and_return(activity_poller_1)
+
+        subject.register_workflow(TestWorkerWorkflow)
+        subject.register_activity(TestWorkerActivity)
+
+        subject.start
+
+        expect(workflow_poller_1).to have_received(:start)
+        expect(activity_poller_1).to have_received(:start)
+      end
+    end
+
+    it 'sleeps while waiting for the shutdown' do
+      allow(subject).to receive(:shutting_down?).and_return(false, false, false, true)
+      allow(subject).to receive(:sleep).and_return(nil)
+
+      subject.start
+
+      expect(subject).to have_received(:sleep).with(1).exactly(3).times
+    end
+
+    describe 'signal handling' do
+      before do
+        @thread = Thread.new { subject.start }
+        sleep THREAD_SYNC_DELAY # give worker time to start
+      end
+
+      around do |example|
+        # Trick RSpec into not shutting itself down on TERM signal
+        old_term_handler = Signal.trap('TERM', 'SYSTEM_DEFAULT')
+        old_int_handler = Signal.trap('INT', 'SYSTEM_DEFAULT')
+
+        example.run
+
+        # Restore the original signal handling behaviour
+        Signal.trap('TERM', old_term_handler)
+        Signal.trap('INT', old_int_handler)
+      end
+
 #       it 'traps TERM signal' do
 #         Process.kill('TERM', 0)
 #         sleep THREAD_SYNC_DELAY
@@ -442,7 +442,7 @@ describe Temporal::Worker do
 #
 #         expect(@thread).not_to be_alive
 #       end
-#     end
+    end
   end
 
   describe '#stop' do
