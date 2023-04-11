@@ -202,80 +202,80 @@ describe Temporal::Worker do
     end
   end
 
-#   describe '#start' do
-#     let(:workflow_poller_1) { instance_double(Temporal::Workflow::Poller, start: nil) }
-#     let(:workflow_poller_2) { instance_double(Temporal::Workflow::Poller, start: nil) }
-#     let(:activity_poller_1) { instance_double(Temporal::Activity::Poller, start: nil) }
-#     let(:activity_poller_2) { instance_double(Temporal::Activity::Poller, start: nil) }
-#
-#     it 'starts a poller for each namespace/task list combination' do
-#       allow(subject).to receive(:shutting_down?).and_return(true)
-#
-#       allow(Temporal::Workflow::Poller)
-#         .to receive(:new)
-#         .with(
-#           'default-namespace',
-#           'default-task-queue',
-#           an_instance_of(Temporal::ExecutableLookup),
-#           config,
-#           [],
-#           [],
-#           thread_pool_size: 10,
-#           binary_checksum: nil
-#         )
-#         .and_return(workflow_poller_1)
-#
-#       allow(Temporal::Workflow::Poller)
-#         .to receive(:new)
-#         .with(
-#           'other-namespace',
-#           'default-task-queue',
-#           an_instance_of(Temporal::ExecutableLookup),
-#           config,
-#           [],
-#           [],
-#           thread_pool_size: 10,
-#           binary_checksum: nil
-#         )
-#         .and_return(workflow_poller_2)
-#
-#       allow(Temporal::Activity::Poller)
-#         .to receive(:new)
-#         .with(
-#           'default-namespace',
-#           'default-task-queue',
-#           an_instance_of(Temporal::ExecutableLookup),
-#           config,
-#           [],
-#           thread_pool_size: 20
-#         )
-#         .and_return(activity_poller_1)
-#
-#       allow(Temporal::Activity::Poller)
-#         .to receive(:new)
-#         .with(
-#           'default-namespace',
-#           'other-task-queue',
-#           an_instance_of(Temporal::ExecutableLookup),
-#           config,
-#           [],
-#           thread_pool_size: 20
-#         )
-#         .and_return(activity_poller_2)
-#
-#       subject.register_workflow(TestWorkerWorkflow)
-#       subject.register_workflow(TestWorkerWorkflow, namespace: 'other-namespace')
-#       subject.register_activity(TestWorkerActivity)
-#       subject.register_activity(TestWorkerActivity, task_queue: 'other-task-queue')
-#
-#       subject.start
-#
-#       expect(workflow_poller_1).to have_received(:start)
-#       expect(workflow_poller_2).to have_received(:start)
-#       expect(activity_poller_1).to have_received(:start)
-#       expect(activity_poller_2).to have_received(:start)
-#     end
-#
+  describe '#start' do
+    let(:workflow_poller_1) { instance_double(Temporal::Workflow::Poller, start: nil) }
+    let(:workflow_poller_2) { instance_double(Temporal::Workflow::Poller, start: nil) }
+    let(:activity_poller_1) { instance_double(Temporal::Activity::Poller, start: nil) }
+    let(:activity_poller_2) { instance_double(Temporal::Activity::Poller, start: nil) }
+
+    it 'starts a poller for each namespace/task list combination' do
+      allow(subject).to receive(:shutting_down?).and_return(true)
+
+      allow(Temporal::Workflow::Poller)
+        .to receive(:new)
+        .with(
+          'default-namespace',
+          'default-task-queue',
+          an_instance_of(Temporal::ExecutableLookup),
+          config,
+          [],
+          [],
+          thread_pool_size: 10,
+          binary_checksum: nil
+        )
+        .and_return(workflow_poller_1)
+
+      allow(Temporal::Workflow::Poller)
+        .to receive(:new)
+        .with(
+          'other-namespace',
+          'default-task-queue',
+          an_instance_of(Temporal::ExecutableLookup),
+          config,
+          [],
+          [],
+          thread_pool_size: 10,
+          binary_checksum: nil
+        )
+        .and_return(workflow_poller_2)
+
+      allow(Temporal::Activity::Poller)
+        .to receive(:new)
+        .with(
+          'default-namespace',
+          'default-task-queue',
+          an_instance_of(Temporal::ExecutableLookup),
+          config,
+          [],
+          thread_pool_size: 20
+        )
+        .and_return(activity_poller_1)
+
+      allow(Temporal::Activity::Poller)
+        .to receive(:new)
+        .with(
+          'default-namespace',
+          'other-task-queue',
+          an_instance_of(Temporal::ExecutableLookup),
+          config,
+          [],
+          thread_pool_size: 20
+        )
+        .and_return(activity_poller_2)
+
+      subject.register_workflow(TestWorkerWorkflow)
+      subject.register_workflow(TestWorkerWorkflow, namespace: 'other-namespace')
+      subject.register_activity(TestWorkerActivity)
+      subject.register_activity(TestWorkerActivity, task_queue: 'other-task-queue')
+
+      subject.start
+
+      expect(workflow_poller_1).to have_received(:start)
+      expect(workflow_poller_2).to have_received(:start)
+      expect(activity_poller_1).to have_received(:start)
+      expect(activity_poller_2).to have_received(:start)
+    end
+
 #     it 'can have an activity poller with a different thread pool size' do
 #       activity_poller = instance_double(Temporal::Activity::Poller, start: nil)
 #       expect(Temporal::Activity::Poller)
@@ -497,5 +497,5 @@ describe Temporal::Worker do
 #       expect(workflow_poller).to have_received(:wait)
 #       expect(activity_poller).to have_received(:wait)
 #     end
-#   end
+  end
 end
