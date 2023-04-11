@@ -41,6 +41,11 @@ jobs:
           POSTGRES_DB: temporal
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
       temporal:
         image: temporalio/auto-setup:latest
@@ -52,6 +57,11 @@ jobs:
           POSTGRES_PWD: temporal
           POSTGRES_SEEDS: postgres
           DB_PORT: 5432
+          options: >-
+            --health-cmd "bash -c 'grpc-health-probe -addr=localhost:7233'"
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
 
     steps:
       - uses: actions/checkout@v3
