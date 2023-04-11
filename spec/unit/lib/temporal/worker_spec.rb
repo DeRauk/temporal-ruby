@@ -276,35 +276,35 @@ describe Temporal::Worker do
       expect(activity_poller_2).to have_received(:start)
     end
 
-#     it 'can have an activity poller with a different thread pool size' do
-#       activity_poller = instance_double(Temporal::Activity::Poller, start: nil)
-#       expect(Temporal::Activity::Poller)
-#         .to receive(:new)
-#         .with(
-#           'default-namespace',
-#           'default-task-queue',
-#           an_instance_of(Temporal::ExecutableLookup),
-#           an_instance_of(Temporal::Configuration),
-#           [],
-#           {thread_pool_size: 10}
-#         )
-#         .and_return(activity_poller)
-#
-#       workflow_poller = instance_double(Temporal::Workflow::Poller, start: nil)
-#       expect(Temporal::Workflow::Poller)
-#         .to receive(:new)
-#               .and_return(workflow_poller)
-#
-#       worker = Temporal::Worker.new(activity_thread_pool_size: 10)
-#       allow(worker).to receive(:shutting_down?).and_return(true)
-#       worker.register_workflow(TestWorkerWorkflow)
-#       worker.register_activity(TestWorkerActivity)
-#
-#       worker.start
-#
-#       expect(activity_poller).to have_received(:start)
-#     end
-#
+    it 'can have an activity poller with a different thread pool size' do
+      activity_poller = instance_double(Temporal::Activity::Poller, start: nil)
+      expect(Temporal::Activity::Poller)
+        .to receive(:new)
+        .with(
+          'default-namespace',
+          'default-task-queue',
+          an_instance_of(Temporal::ExecutableLookup),
+          an_instance_of(Temporal::Configuration),
+          [],
+          {thread_pool_size: 10}
+        )
+        .and_return(activity_poller)
+
+      workflow_poller = instance_double(Temporal::Workflow::Poller, start: nil)
+      expect(Temporal::Workflow::Poller)
+        .to receive(:new)
+              .and_return(workflow_poller)
+
+      worker = Temporal::Worker.new(activity_thread_pool_size: 10)
+      allow(worker).to receive(:shutting_down?).and_return(true)
+      worker.register_workflow(TestWorkerWorkflow)
+      worker.register_activity(TestWorkerActivity)
+
+      worker.start
+
+      expect(activity_poller).to have_received(:start)
+    end
+
 #     it 'can have a worklow poller with a binary checksum' do
 #       activity_poller = instance_double(Temporal::Activity::Poller, start: nil)
 #       expect(Temporal::Activity::Poller)
