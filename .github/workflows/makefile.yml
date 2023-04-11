@@ -25,3 +25,42 @@ jobs:
     - name: Run tests
       run: |
         bundle exec rspec
+
+  test_examples:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: temporal
+          POSTGRES_PASSWORD: temporal
+          POSTGRES_DB: temporal
+        ports:
+          - 5432:5432
+
+      temporal:
+        image: temporalio/auto-setup:latest
+        ports:
+          - 7233:7233
+        env:
+          DB: temporal
+          POSTGRES_USER: temporal
+          POSTGRES_PWD: temporal
+          POSTGRES_SEEDS: postgres
+          DB_PORT: 5432
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.3
+
+      - name: Bundle install
+        run: |
+          cd examples && bundle install --path vendor/bundle
