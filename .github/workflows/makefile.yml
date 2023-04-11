@@ -57,3 +57,19 @@ jobs:
       - name: Register Namespace
         run: |
           cd examples && bin/register_namespace ruby-samples
+
+      - name: Boot up worker
+        run: |
+          cd examples && bin/worker &
+
+      - name: Boot up crypt worker
+        env:
+          USE_ENCRYPTION: 1
+        run: |
+          cd examples && bin/worker &
+
+      - name: Boot up worker for v2 error serialization tests
+        env:
+          USE_ERROR_SERIALIZATION_V2: 1
+        run: |
+          cd examples && bin/worker &
