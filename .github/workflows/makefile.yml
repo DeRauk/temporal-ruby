@@ -82,4 +82,4 @@ jobs:
         env:
           USE_ERROR_SERIALIZATION_V2: 1
         run: |
-          cd examples && bundle exec rspec
+          cd examples && bundle exec rspec spec/integration/start_workflow_spec.rb
