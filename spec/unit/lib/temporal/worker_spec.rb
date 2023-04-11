@@ -164,44 +164,44 @@ describe Temporal::Worker do
 
   end
 
-#   describe '#add_workflow_task_middleware' do
-#     let(:middleware) { subject.send(:workflow_task_middleware) }
-#
-#     it 'adds middleware entry to the list of middlewares' do
-#       subject.add_workflow_task_middleware(TestWorkerWorkflowTaskMiddleware)
-#       subject.add_workflow_task_middleware(TestWorkerWorkflowTaskMiddleware, 'arg1', 'arg2')
-#
-#       expect(middleware.size).to eq(2)
-#
-#       expect(middleware[0]).to be_an_instance_of(Temporal::Middleware::Entry)
-#       expect(middleware[0].klass).to eq(TestWorkerWorkflowTaskMiddleware)
-#       expect(middleware[0].args).to eq([])
-#
-#       expect(middleware[1]).to be_an_instance_of(Temporal::Middleware::Entry)
-#       expect(middleware[1].klass).to eq(TestWorkerWorkflowTaskMiddleware)
-#       expect(middleware[1].args).to eq(['arg1', 'arg2'])
-#     end
-#   end
-#
-#   describe '#add_activity_middleware' do
-#     let(:middleware) { subject.send(:activity_middleware) }
-#
-#     it 'adds middleware entry to the list of middlewares' do
-#       subject.add_activity_middleware(TestWorkerActivityMiddleware)
-#       subject.add_activity_middleware(TestWorkerActivityMiddleware, 'arg1', 'arg2')
-#
-#       expect(middleware.size).to eq(2)
-#
-#       expect(middleware[0]).to be_an_instance_of(Temporal::Middleware::Entry)
-#       expect(middleware[0].klass).to eq(TestWorkerActivityMiddleware)
-#       expect(middleware[0].args).to eq([])
-#
-#       expect(middleware[1]).to be_an_instance_of(Temporal::Middleware::Entry)
-#       expect(middleware[1].klass).to eq(TestWorkerActivityMiddleware)
-#       expect(middleware[1].args).to eq(['arg1', 'arg2'])
-#     end
-#   end
-#
+  describe '#add_workflow_task_middleware' do
+    let(:middleware) { subject.send(:workflow_task_middleware) }
+
+    it 'adds middleware entry to the list of middlewares' do
+      subject.add_workflow_task_middleware(TestWorkerWorkflowTaskMiddleware)
+      subject.add_workflow_task_middleware(TestWorkerWorkflowTaskMiddleware, 'arg1', 'arg2')
+
+      expect(middleware.size).to eq(2)
+
+      expect(middleware[0]).to be_an_instance_of(Temporal::Middleware::Entry)
+      expect(middleware[0].klass).to eq(TestWorkerWorkflowTaskMiddleware)
+      expect(middleware[0].args).to eq([])
+
+      expect(middleware[1]).to be_an_instance_of(Temporal::Middleware::Entry)
+      expect(middleware[1].klass).to eq(TestWorkerWorkflowTaskMiddleware)
+      expect(middleware[1].args).to eq(['arg1', 'arg2'])
+    end
+  end
+
+  describe '#add_activity_middleware' do
+    let(:middleware) { subject.send(:activity_middleware) }
+
+    it 'adds middleware entry to the list of middlewares' do
+      subject.add_activity_middleware(TestWorkerActivityMiddleware)
+      subject.add_activity_middleware(TestWorkerActivityMiddleware, 'arg1', 'arg2')
+
+      expect(middleware.size).to eq(2)
+
+      expect(middleware[0]).to be_an_instance_of(Temporal::Middleware::Entry)
+      expect(middleware[0].klass).to eq(TestWorkerActivityMiddleware)
+      expect(middleware[0].args).to eq([])
+
+      expect(middleware[1]).to be_an_instance_of(Temporal::Middleware::Entry)
+      expect(middleware[1].klass).to eq(TestWorkerActivityMiddleware)
+      expect(middleware[1].args).to eq(['arg1', 'arg2'])
+    end
+  end
+
 #   describe '#start' do
 #     let(:workflow_poller_1) { instance_double(Temporal::Workflow::Poller, start: nil) }
 #     let(:workflow_poller_2) { instance_double(Temporal::Workflow::Poller, start: nil) }
