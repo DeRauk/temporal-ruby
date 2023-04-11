@@ -41,7 +41,7 @@ module Temporal
     end
 
     def configuration
-      warn '[DEPRECATION] This method is now deprecated without a substitution'
+      # warn '[DEPRECATION] This method is now deprecated without a substitution'
       config
     end
 
