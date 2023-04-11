@@ -71,6 +71,10 @@ jobs:
         with:
           ruby-version: 3.0.3
 
-      - name: Bundle install
+      - name: Bundle Install
         run: |
           cd examples && bundle install --path vendor/bundle
+
+      - name: Register Namespace
+        run: |
+          cd examples && bin/register_namespace ruby-samples
