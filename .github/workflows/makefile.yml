@@ -35,7 +35,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Start containerized server and dependencies
+      - name: Start dependencies
         run: |
           docker-compose \
             -f examples/docker-compose.yml \
@@ -46,17 +46,21 @@ jobs:
         with:
           ruby-version: 3.0.3
 
-      - name: Bundle Install
+      - name: Bundle install
         run: |
           cd examples && bundle install --path vendor/bundle
 
-      - name: Register Namespace
+      - name: Wait for dependencies to settle
+        run: |
+          sleep 10
+
+      - name: Register namespace
         run: |
           cd examples && bin/register_namespace ruby-samples
 
       - name: Wait for namespace to settle
         run: |
-          sleep 15
+          sleep 10
 
       - name: Boot up worker
         run: |
