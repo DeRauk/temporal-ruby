@@ -38,7 +38,7 @@ jobs:
       - name: Start containerized server and dependencies
         run: |
           docker-compose \
-            -f /examples/docker-compose.yml \
+            -f examples/docker-compose.yml \
             up -d
 
       - name: Set up Ruby
