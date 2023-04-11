@@ -413,7 +413,10 @@ describe Temporal::Worker do
 
     describe 'signal handling' do
       before do
-        @thread = Thread.new { subject.start }
+        @thread = Thread.new do
+          @worker_pid = Process.pid
+          subject.start
+        end
         sleep THREAD_SYNC_DELAY # give worker time to start
       end
 
@@ -429,19 +432,19 @@ describe Temporal::Worker do
         Signal.trap('INT', old_int_handler)
       end
 
-#       it 'traps TERM signal' do
-#         Process.kill('TERM', 0)
-#         sleep THREAD_SYNC_DELAY
-#
-#         expect(@thread).not_to be_alive
-#       end
-#
-#       it 'traps INT signal' do
-#         Process.kill('INT', 0)
-#         sleep THREAD_SYNC_DELAY
-#
-#         expect(@thread).not_to be_alive
-#       end
+      it 'traps TERM signal' do
+        Process.kill('TERM', @worker_pid)
+        sleep THREAD_SYNC_DELAY
+
+        expect(@thread).not_to be_alive
+      end
+
+      it 'traps INT signal' do
+        Process.kill('INT', @worker_pid)
+        sleep THREAD_SYNC_DELAY
+
+        expect(@thread).not_to be_alive
+      end
     end
   end
 
