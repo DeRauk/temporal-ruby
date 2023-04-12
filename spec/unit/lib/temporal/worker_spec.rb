@@ -96,11 +96,11 @@ describe Temporal::Worker do
       expect do
         subject.register_dynamic_workflow(OtherTestWorkerWorkflow)
       end.to raise_error(
-        Temporal::SecondDynamicWorkflowError,
-        'Temporal::Worker#register_dynamic_workflow: cannot register OtherTestWorkerWorkflow dynamically; ' \
+               Temporal::SecondDynamicWorkflowError,
+               'Temporal::Worker#register_dynamic_workflow: cannot register OtherTestWorkerWorkflow dynamically; ' \
         'TestWorkerWorkflow was already registered dynamically for task queue \'default-task-queue\', ' \
         'and there can be only one.'
-      )
+             )
     end
   end
 
@@ -154,11 +154,11 @@ describe Temporal::Worker do
       expect do
         subject.register_dynamic_activity(OtherTestWorkerActivity)
       end.to raise_error(
-        Temporal::SecondDynamicActivityError,
-        'Temporal::Worker#register_dynamic_activity: cannot register OtherTestWorkerActivity dynamically; ' \
+               Temporal::SecondDynamicActivityError,
+               'Temporal::Worker#register_dynamic_activity: cannot register OtherTestWorkerActivity dynamically; ' \
         'TestWorkerActivity was already registered dynamically for task queue \'default-task-queue\', ' \
         'and there can be only one.'
-      )
+             )
     end
 
 
@@ -213,55 +213,55 @@ describe Temporal::Worker do
 
       allow(Temporal::Workflow::Poller)
         .to receive(:new)
-        .with(
-          'default-namespace',
-          'default-task-queue',
-          an_instance_of(Temporal::ExecutableLookup),
-          config,
-          [],
-          [],
-          thread_pool_size: 10,
-          binary_checksum: nil
-        )
-        .and_return(workflow_poller_1)
+              .with(
+                'default-namespace',
+                'default-task-queue',
+                an_instance_of(Temporal::ExecutableLookup),
+                config,
+                [],
+                [],
+                thread_pool_size: 10,
+                binary_checksum: nil
+              )
+              .and_return(workflow_poller_1)
 
       allow(Temporal::Workflow::Poller)
         .to receive(:new)
-        .with(
-          'other-namespace',
-          'default-task-queue',
-          an_instance_of(Temporal::ExecutableLookup),
-          config,
-          [],
-          [],
-          thread_pool_size: 10,
-          binary_checksum: nil
-        )
-        .and_return(workflow_poller_2)
+              .with(
+                'other-namespace',
+                'default-task-queue',
+                an_instance_of(Temporal::ExecutableLookup),
+                config,
+                [],
+                [],
+                thread_pool_size: 10,
+                binary_checksum: nil
+              )
+              .and_return(workflow_poller_2)
 
       allow(Temporal::Activity::Poller)
         .to receive(:new)
-        .with(
-          'default-namespace',
-          'default-task-queue',
-          an_instance_of(Temporal::ExecutableLookup),
-          config,
-          [],
-          thread_pool_size: 20
-        )
-        .and_return(activity_poller_1)
+              .with(
+                'default-namespace',
+                'default-task-queue',
+                an_instance_of(Temporal::ExecutableLookup),
+                config,
+                [],
+                thread_pool_size: 20
+              )
+              .and_return(activity_poller_1)
 
       allow(Temporal::Activity::Poller)
         .to receive(:new)
-        .with(
-          'default-namespace',
-          'other-task-queue',
-          an_instance_of(Temporal::ExecutableLookup),
-          config,
-          [],
-          thread_pool_size: 20
-        )
-        .and_return(activity_poller_2)
+              .with(
+                'default-namespace',
+                'other-task-queue',
+                an_instance_of(Temporal::ExecutableLookup),
+                config,
+                [],
+                thread_pool_size: 20
+              )
+              .and_return(activity_poller_2)
 
       subject.register_workflow(TestWorkerWorkflow)
       subject.register_workflow(TestWorkerWorkflow, namespace: 'other-namespace')
@@ -280,15 +280,20 @@ describe Temporal::Worker do
       activity_poller = instance_double(Temporal::Activity::Poller, start: nil)
       expect(Temporal::Activity::Poller)
         .to receive(:new)
-        .with(
-          'default-namespace',
-          'default-task-queue',
-          an_instance_of(Temporal::ExecutableLookup),
-          an_instance_of(Temporal::Configuration),
-          [],
-          {thread_pool_size: 10}
-        )
-        .and_return(activity_poller)
+              .with(
+                'default-namespace',
+                'default-task-queue',
+                an_instance_of(Temporal::ExecutableLookup),
+                an_instance_of(Temporal::Configuration),
+                [],
+                {thread_pool_size: 10}
+              )
+              .and_return(activity_poller)
+
+      workflow_poller = instance_double(Temporal::Workflow::Poller, start: nil)
+      expect(Temporal::Workflow::Poller)
+        .to receive(:new)
+              .and_return(workflow_poller)
 
       worker = Temporal::Worker.new(activity_thread_pool_size: 10)
       allow(worker).to receive(:shutting_down?).and_return(true)
@@ -301,21 +306,26 @@ describe Temporal::Worker do
     end
 
     it 'can have a worklow poller with a binary checksum' do
+      activity_poller = instance_double(Temporal::Activity::Poller, start: nil)
+      expect(Temporal::Activity::Poller)
+        .to receive(:new)
+              .and_return(activity_poller)
+
       workflow_poller = instance_double(Temporal::Workflow::Poller, start: nil)
       binary_checksum = 'abc123'
       expect(Temporal::Workflow::Poller)
         .to receive(:new)
-        .with(
-          'default-namespace',
-          'default-task-queue',
-          an_instance_of(Temporal::ExecutableLookup),
-          an_instance_of(Temporal::Configuration),
-          [],
-          [],
-          thread_pool_size: 10,
-          binary_checksum: binary_checksum
-        )
-        .and_return(workflow_poller)
+              .with(
+                'default-namespace',
+                'default-task-queue',
+                an_instance_of(Temporal::ExecutableLookup),
+                an_instance_of(Temporal::Configuration),
+                [],
+                [],
+                thread_pool_size: 10,
+                binary_checksum: binary_checksum
+              )
+              .and_return(workflow_poller)
 
       worker = Temporal::Worker.new(binary_checksum: binary_checksum)
       allow(worker).to receive(:shutting_down?).and_return(true)
@@ -335,18 +345,18 @@ describe Temporal::Worker do
       before do
         allow(Temporal::Middleware::Entry)
           .to receive(:new)
-          .with(TestWorkerWorkflowTaskMiddleware, [])
-          .and_return(entry_1)
+                .with(TestWorkerWorkflowTaskMiddleware, [])
+                .and_return(entry_1)
 
         allow(Temporal::Middleware::Entry)
           .to receive(:new)
-          .with(TestWorkerActivityMiddleware, [])
-          .and_return(entry_2)
+                .with(TestWorkerActivityMiddleware, [])
+                .and_return(entry_2)
 
         allow(Temporal::Middleware::Entry)
           .to receive(:new)
-          .with(TestWorkerWorkflowMiddleware, [])
-          .and_return(entry_3)
+                .with(TestWorkerWorkflowMiddleware, [])
+                .and_return(entry_3)
 
         subject.add_workflow_task_middleware(TestWorkerWorkflowTaskMiddleware)
         subject.add_activity_middleware(TestWorkerActivityMiddleware)
@@ -358,29 +368,29 @@ describe Temporal::Worker do
 
         allow(Temporal::Workflow::Poller)
           .to receive(:new)
-          .with(
-            'default-namespace',
-            'default-task-queue',
-            an_instance_of(Temporal::ExecutableLookup),
-            config,
-            [entry_1],
-            [entry_3],
-            thread_pool_size: 10,
-            binary_checksum: nil
-          )
-          .and_return(workflow_poller_1)
+                .with(
+                  'default-namespace',
+                  'default-task-queue',
+                  an_instance_of(Temporal::ExecutableLookup),
+                  config,
+                  [entry_1],
+                  [entry_3],
+                  thread_pool_size: 10,
+                  binary_checksum: nil
+                )
+                .and_return(workflow_poller_1)
 
         allow(Temporal::Activity::Poller)
           .to receive(:new)
-          .with(
-            'default-namespace',
-            'default-task-queue',
-            an_instance_of(Temporal::ExecutableLookup),
-            config,
-            [entry_2],
-            thread_pool_size: 20
-          )
-          .and_return(activity_poller_1)
+                .with(
+                  'default-namespace',
+                  'default-task-queue',
+                  an_instance_of(Temporal::ExecutableLookup),
+                  config,
+                  [entry_2],
+                  thread_pool_size: 20
+                )
+                .and_return(activity_poller_1)
 
         subject.register_workflow(TestWorkerWorkflow)
         subject.register_activity(TestWorkerActivity)
@@ -403,7 +413,10 @@ describe Temporal::Worker do
 
     describe 'signal handling' do
       before do
-        @thread = Thread.new { subject.start }
+        @thread = Thread.new do
+          @worker_pid = Process.pid
+          subject.start
+        end
         sleep THREAD_SYNC_DELAY # give worker time to start
       end
 
@@ -420,14 +433,14 @@ describe Temporal::Worker do
       end
 
       it 'traps TERM signal' do
-        Process.kill('TERM', 0)
+        Process.kill('TERM', @worker_pid)
         sleep THREAD_SYNC_DELAY
 
         expect(@thread).not_to be_alive
       end
 
       it 'traps INT signal' do
-        Process.kill('INT', 0)
+        Process.kill('INT', @worker_pid)
         sleep THREAD_SYNC_DELAY
 
         expect(@thread).not_to be_alive
