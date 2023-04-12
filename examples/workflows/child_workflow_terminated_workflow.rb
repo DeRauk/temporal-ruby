@@ -12,6 +12,9 @@ class ChildWorkflowTerminatedWorkflow < Temporal::Workflow
       child_workflow_execution.run_id
     )
 
+    workflow.logger.info("Result Get: #{result.get}")
+    workflow.logger.info("Result failed: #{result.failed?}")
+
     # check that the result is now 'failed'
     {
       child_workflow_terminated: result.failed?, # terminated is represented as failed? with the Terminated Error
